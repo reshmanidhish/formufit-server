@@ -5,7 +5,7 @@ const saltRounds = 10;
 
 const router = require("express").Router();
 
-//const { isAuthenticated } = require("../middlewares/jwt.middleware");
+const { isAuthenticated } = require("../middlewares/jwt.middleware");
 
 //SIGNUP
 
