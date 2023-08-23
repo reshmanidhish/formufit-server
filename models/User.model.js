@@ -20,39 +20,39 @@ const userSchema = new Schema(
     },
     userType: {
       type: String,
-      required: true
+      
     },
     gender: {
       type: String,
-      required: true
+      
     },
     answers: {
       type: {},
-      required: true
+      
     },
     state: {
       type: String,
-      required: true
+      
     },
     country: {
       type: String,
-      required: true
+      
     },
     bmi: {
       type: Number,
-      required: true
+      
     },
     bodyType: {
       type: String,
-      required: true
+      
     },
     lifeStyle: {
       type: Number,
-      required: true
+      
     },
     fitnessLevel: {
-      type: Number,
-      required: true
+      type: String,
+      
     },
   },
   {

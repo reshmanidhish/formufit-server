@@ -10,10 +10,10 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware");
 //SIGNUP
 
 router.post("/signup", (req, res, next) => {
-    const { email, password, username, gender, state, country } = req.body;
+    const { email, password, username } = req.body;
  
     // Check if the email or password or username.... is provided as an empty string 
-    if (email === '' || password === '' || username === '' || gender === '' || state === '' || country === '') {
+    if (email === '' || password === '' || username === '') {
       res.status(400).json({ message: "Provide email, password and name" });
       return;
     }
@@ -48,7 +48,7 @@ router.post("/signup", (req, res, next) => {
    
         // Create a new user in the database
         // We return a pending promise, which allows us to chain another `then` 
-        return User.create({ email, password: hashedPassword, username, gender, state, country });
+        return User.create({ email, password: hashedPassword, username });
       })
       .then((createdUser) => {
         // Deconstruct the newly created user object to omit the password
@@ -65,6 +65,64 @@ router.post("/signup", (req, res, next) => {
         console.log(err);
         res.status(500).json({ message: "Internal Server Error" })
       });
+});
+
+router.post("/login", (req, res, next) => {
+  const { email, password } = req.body;
+
+// Check if email or password are provided as empty string 
+if (email === '' || password === '') {
+  res.status(400).json({ message: "Provide email and password." });
+  return;
+}
+
+// Check the users collection if a user with the same email exists
+User.findOne({ email })
+  .then((foundUser) => {
+  
+    if (!foundUser) {
+      // If the user is not found, send an error response
+      res.status(401).json({ message: "User not found." })
+      return;
+    }
+
+    // Compare the provided password with the one saved in the database
+    const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
+
+    if (passwordCorrect) {
+      // Deconstruct the user object to omit the password
+      const { _id, email, username } = foundUser;
+      
+      // Create an object that will be set as the token payload
+      const payload = { _id, email, username };
+
+      // Create and sign the token
+      const authToken = jwt.sign( 
+        payload,
+        process.env.TOKEN_SECRET,
+        { algorithm: 'HS256', expiresIn: "6h" }
+      );
+
+      // Send the token as the response
+      res.status(200).json({ authToken: authToken, message: "Login was successful" });
+    }
+    else {
+      res.status(401).json({ message: "Unable to authenticate the user" });
+    }
+
+  })
+  .catch(err => res.status(500).json({ message: "Internal Server Error" }));
+});
+
+router.get('/verify', isAuthenticated, (req, res, next) => {       // <== CREATE NEW ROUTE
+
+  // If JWT token is valid the payload gets decoded by the
+  // isAuthenticated middleware and made available on `req.payload`
+  console.log(`req.payload`, req.payload);
+ 
+  // Send back the object with user data
+  // previously set as the token payload
+  res.status(200).json(req.payload);
 });
 
 module.exports = router;
