@@ -28,7 +28,7 @@ const recipeSchema = new Schema(
 
 
 // Connect to MongoDB and Atlas
-mongoose.connect("mongodb+srv://didemaydin:shMWMd7eziE0Ijcs@cluster0.oaymbdf.mongodb.net/formufit")
+mongoose.connect(MONGODB_URI)
 .then(() => {
   console.log("Connected to MongoDB Atlas");
 
