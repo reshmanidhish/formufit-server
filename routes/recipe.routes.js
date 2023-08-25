@@ -9,6 +9,18 @@ mongoose.connect(MONGO_URI)
 .then(() => {
   console.log("Connected to MongoDB Atlas");
 
+  router.get("/recipe", async (req, res) => {
+    try {
+        const recipes = await Recipe.find();
+        res.status(200).json(recipes);
+    }
+    catch (error) {
+        console.log("error fetching recipes", error);
+        res.status(500).json({error: "Error fetching recipes"});
+    }
+})
+
+
   // Create an array of recipe objects
 const recipes = [
     {
@@ -76,12 +88,11 @@ Recipe.create(recipes)
 .catch(error => {
   console.error("Error creating recipes:", error);
 })
-.finally(() => {
-  mongoose.disconnect(); // Disconnect from the database when done
-});
+
 })
 .catch(error => {
 console.error("Error connecting to MongoDB Atlas:", error);
 });
+
 
 module.exports = router;
