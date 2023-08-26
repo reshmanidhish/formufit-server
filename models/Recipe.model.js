@@ -7,7 +7,7 @@ const recipeSchema = new Schema(
             type: String,
             required: true
           },
-        image: {
+        recipeImage: {
             type: String,
             required: true
           },
@@ -23,6 +23,10 @@ const recipeSchema = new Schema(
             type: String,
             required: true
           },
+        adminId: {
+          type: Schema.Types.ObjectId,
+          ref: "User"
+        }
     }
 )
 

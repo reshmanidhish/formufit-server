@@ -20,17 +20,17 @@ const userSchema = new Schema(
     },
     userType: {
       type: String,
-      
+      enum: ["admin", "regular"]
     },
     gender: {
       type: String,
-      
+      enum: ["female", "male"]
     },
     answers: {
       type: {},
       
     },
-    state: {
+    city: {
       type: String,
       
     },
@@ -44,6 +44,7 @@ const userSchema = new Schema(
     },
     bodyType: {
       type: String,
+      enum:["x","y","z"]
       
     },
     lifeStyle: {
@@ -54,6 +55,9 @@ const userSchema = new Schema(
       type: String,
       
     },
+    profileImage: {
+      type: String,
+    }
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`    
