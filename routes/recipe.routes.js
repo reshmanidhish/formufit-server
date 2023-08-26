@@ -4,8 +4,6 @@ const mongoose = require("mongoose");
 const fileUploader = require("../config/cloudinary.config");
 const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
 
-
-
   router.get("/", async (req, res) => {
     try {
         const recipes = await Recipe.find();
@@ -16,6 +14,8 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
         res.status(500).json({error: "Error fetching recipes"});
     }
 })
+
+    
 
     //uploading recipe image
   router.post("/upload", fileUploader.single("image"),(req,res,next) => {
@@ -33,6 +33,7 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
     router.post("/create", (req,res) => {
     const {title, recipeImage,ingredients,instructions, bodyType, adminId}=req.body;
 
+
 // Insert the recipes into the database
 Recipe.create({title, recipeImage,ingredients,instructions, bodyType, adminId})
 .then(createdRecipes => {
@@ -44,6 +45,37 @@ Recipe.create({title, recipeImage,ingredients,instructions, bodyType, adminId})
 });
 
 })
+
+router.put("/edit/:id", (req, res) => {
+    const recipeId = req.params.id;
+    const {title, recipeImage,ingredients,instructions, bodyType}=req.body;
+
+    const updatedForm ={title, recipeImage,ingredients,instructions, bodyType};
+  
+    Recipe.findByIdAndUpdate(recipeId, updatedForm, {new:true})
+      .then(updatedRecipe => {
+       if (!updatedRecipe) {
+        return res.status(404).json({message:"Recipe not found"});
+       }
+        res.json({ updatedRecipe })
+      })
+      .catch(err => console.error(err))
+  
+  })
+
+  router.delete("/delete/:id", (req, res) => {
+    const recipeId = req.params.id;
+  
+    Recipe.findByIdAndDelete(recipeId)
+      .then(deletedRecipe => {
+        if (!deletedRecipe) {
+            return res.status(404).json({message: "recipe not found"});
+        }
+        res.json({message:"Recipe deleted successfully"});
+      })
+      .catch(err => console.error(err))
+  
+  })
 
 
 module.exports = router;
