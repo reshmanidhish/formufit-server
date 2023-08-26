@@ -14,11 +14,8 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
         res.status(500).json({error: "Error fetching recipes"});
     }
 })
-
-    
-
     //uploading recipe image
-  router.post("/upload", fileUploader.single("image"),(req,res,next) => {
+  router.post("/upload", fileUploader.single("recipeImage"),(req,res,next) => {
     console.log("file is:", req.file)
     if (!req.file){
         next(new Error("no photo uploaded!"));
@@ -30,21 +27,20 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
   res.json({ fileUrl: req.file.path });
   });
 
-    router.post("/create", (req,res) => {
+router.post("/create", (req,res) => {
     const {title, recipeImage,ingredients,instructions, bodyType, adminId}=req.body;
 
 
-// Insert the recipes into the database
-Recipe.create({title, recipeImage,ingredients,instructions, bodyType, adminId})
-.then(createdRecipes => {
-  console.log("Recipes created:", createdRecipes);
-  res.json(createdRecipes)
-})
-.catch(error => {
-  console.error("Error creating recipes:", error);
-});
-
-})
+    // Insert the recipes into the database
+        Recipe.create({title, recipeImage,ingredients,instructions, bodyType, adminId})
+            .then(createdRecipes => {
+            console.log("Recipes created:", createdRecipes);
+            res.json(createdRecipes)
+            })
+            .catch(error => {
+            console.error("Error creating recipes:", error);
+            });
+        })
 
 router.put("/edit/:id", (req, res) => {
     const recipeId = req.params.id;

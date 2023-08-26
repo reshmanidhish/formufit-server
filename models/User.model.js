@@ -57,6 +57,12 @@ const userSchema = new Schema(
     },
     profileImage: {
       type: String,
+    },
+    weight: {
+      type: String,
+    },
+    height: {
+      type: String,
     }
   },
   {
