@@ -1,12 +1,25 @@
 const Recipe = require("../models/Recipe.model");
 const router = require("express").Router();
-const mongoose = require("mongoose");
+
 const fileUploader = require("../config/cloudinary.config");
 const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
 
+//isadmin middleware
+
+const isAdmin = (req, res, next) => {
+  //we're using ut to indicate admin role in the JWT payload
+  if(req.user && req.user.ut === 1){
+    next();
+  } 
+  else{
+    res.status(403).json({error: 'Admin authorization required'});
+  }
+};
+
   router.get("/", async (req, res) => {
     try {
-        const recipes = await Recipe.find();
+        const userBodyType = req.user.bodyType;
+        const recipes = await Recipe.find({bodyType: userBodyType});
         res.status(200).json(recipes);
     }
     catch (error) {
@@ -14,23 +27,18 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
         res.status(500).json({error: "Error fetching recipes"});
     }
 })
-    //uploading recipe image
-  router.post("/upload", fileUploader.single("recipeImage"),(req,res,next) => {
+   
+router.post("/create", fileUploader.single("recipeImage"), (req,res) => {
+    const {title,ingredients,instructions, bodyType, adminId}=req.body;
     console.log("file is:", req.file)
     if (!req.file){
-        next(new Error("no photo uploaded!"));
-        return;
-    }
-     // Get the URL of the uploaded file and send it as a response.
-     // 'fileUrl' can be any name, just make sure you remember to use the same when accessing it on the frontend
+      return res.status(400).json({ error: "No photo uploaded!" });
+  }
+  const recipeImage = req.file.path; // Assign the path of the uploaded file
+   // Get the URL of the uploaded file and send it as a response.
+   // 'fileUrl' can be any name, just make sure you remember to use the same when accessing it on the frontend
 
-  res.json({ fileUrl: req.file.path });
-  });
-
-router.post("/create", (req,res) => {
-    const {title, recipeImage,ingredients,instructions, bodyType, adminId}=req.body;
-
-
+res.json({ fileUrl: req.file.path });
     // Insert the recipes into the database
         Recipe.create({title, recipeImage,ingredients,instructions, bodyType, adminId})
             .then(createdRecipes => {
@@ -40,13 +48,12 @@ router.post("/create", (req,res) => {
             .catch(error => {
             console.error("Error creating recipes:", error);
             });
-        })
 
-router.put("/edit/:id", (req, res) => {
+router.put("/edit/:id", fileUploader.single("recipeImage"), (req, res) => {
     const recipeId = req.params.id;
-    const {title, recipeImage,ingredients,instructions, bodyType}=req.body;
+    const {title,ingredients,instructions, bodyType}=req.body;
 
-    const updatedForm ={title, recipeImage,ingredients,instructions, bodyType};
+    const updatedForm ={title,  recipeImage: req.file ? req.file.path : undefined, ingredients,instructions, bodyType};
   
     Recipe.findByIdAndUpdate(recipeId, updatedForm, {new:true})
       .then(updatedRecipe => {
@@ -72,6 +79,8 @@ router.put("/edit/:id", (req, res) => {
       .catch(err => console.error(err))
   
   })
+})
+
 
 
 module.exports = router;

@@ -44,7 +44,7 @@ const userSchema = new Schema(
     },
     bodyType: {
       type: String,
-      enum:["x","y","z"]
+      enum:["Ectomorph","Endomorph","Mesomorph"]
       
     },
     lifeStyle: {

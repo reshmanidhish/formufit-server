@@ -20,8 +20,8 @@ const recipeSchema = new Schema(
             required: true
           },
         bodyType: {
-            type: String,
-            required: true
+            type: Schema.Types.ObjectId,
+            ref: "User"
           },
         adminId: {
           type: Schema.Types.ObjectId,

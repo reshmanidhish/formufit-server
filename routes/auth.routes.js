@@ -91,10 +91,10 @@ User.findOne({ email })
 
     if (passwordCorrect) {
       // Deconstruct the user object to omit the password
-      const { _id, email, username } = foundUser;
-      
+      const { _id, email, username, userType } = foundUser;
+
       // Create an object that will be set as the token payload
-      const payload = { _id, email, username };
+      const payload = { _id, email, username, "ut": userType==='admin'? 1: 0 };
 
       // Create and sign the token
       const authToken = jwt.sign( 
