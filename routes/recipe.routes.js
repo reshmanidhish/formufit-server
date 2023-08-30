@@ -7,13 +7,13 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
 //isadmin middleware
 
 const isAdmin = (req, res, next) => {
-  //we're using ut to indicate admin role in the JWT payload
+ // we're using ut to indicate admin role in the JWT payload
   if(req.user && req.user.ut === 1){
     next();
   } 
-  else{
-    res.status(403).json({error: 'Admin authorization required'});
-  }
+ else{
+   res.status(403).json({error: 'Admin authorization required'});
+ }
 };
 
   router.get("/", async (req, res) => {
@@ -30,24 +30,23 @@ const isAdmin = (req, res, next) => {
    
 router.post("/create", fileUploader.single("recipeImage"), (req,res) => {
     const {title,ingredients,instructions, bodyType, adminId}=req.body;
+    const recipeImage =req.file ? req.file.path : null; // Assign the path of the uploaded file
     console.log("file is:", req.file)
-    if (!req.file){
+    if (!recipeImage){
       return res.status(400).json({ error: "No photo uploaded!" });
   }
-  const recipeImage = req.file.path; // Assign the path of the uploaded file
-   // Get the URL of the uploaded file and send it as a response.
-   // 'fileUrl' can be any name, just make sure you remember to use the same when accessing it on the frontend
 
-res.json({ fileUrl: req.file.path });
     // Insert the recipes into the database
         Recipe.create({title, recipeImage,ingredients,instructions, bodyType, adminId})
             .then(createdRecipes => {
             console.log("Recipes created:", createdRecipes);
-            res.json(createdRecipes)
+            res.status(201).json(createdRecipes);
             })
             .catch(error => {
             console.error("Error creating recipes:", error);
+            res.status(500).json({error: "Error creating recipe"});
             });
+          })
 
 router.put("/edit/:id", fileUploader.single("recipeImage"), (req, res) => {
     const recipeId = req.params.id;
@@ -79,8 +78,6 @@ router.put("/edit/:id", fileUploader.single("recipeImage"), (req, res) => {
       .catch(err => console.error(err))
   
   })
-})
-
 
 
 module.exports = router;
