@@ -20,8 +20,8 @@ const recipeSchema = new Schema(
             required: true
           },
         bodyType: {
-            type: Schema.Types.ObjectId,
-            ref: "User"
+            type: String,
+            enum:["normal","obese","Mesomorph"]
           },
         adminId: {
           type: Schema.Types.ObjectId,
