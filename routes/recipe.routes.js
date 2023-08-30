@@ -40,7 +40,7 @@ router.post("/create", fileUploader.single("recipeImage"), (req,res) => {
 
 res.json({ fileUrl: req.file.path });
     // Insert the recipes into the database
-        Recipe.create({title, recipeImage,ingredients,instructions, bodyType, adminId})
+        Recipe.create({title, recipeImage,ingredients,instructions, bodyType})
             .then(createdRecipes => {
             console.log("Recipes created:", createdRecipes);
             res.json(createdRecipes)
