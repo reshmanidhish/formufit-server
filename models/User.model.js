@@ -44,7 +44,8 @@ const userSchema = new Schema(
     },
     bodyType: {
       type: String,
-      enum:["normal","obese","Mesomorph"]
+      enum:["obese","normal","OverWeight","underWeight"]
+      
     },
     lifeStyle: {
       type: Number,
