@@ -19,6 +19,9 @@ app.use("/auth", authRouter);
 const recipeRouter = require("./routes/recipe.routes");
 app.use("/recipes", recipeRouter);
 
+const workoutsRouter = require("./routes/workouts.routes");
+app.use("/workouts", workoutsRouter);
+
 const profileRouter = require("./routes/profile.routes");
 app.use("/profile", isAuthenticated, profileRouter);
 
