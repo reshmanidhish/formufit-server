@@ -47,9 +47,22 @@ router.post("/create", fileUploader.single("recipeImage"), (req,res) => {
             });
           })
 
+router.get("/:recipeId", (req, res)=> {
+  try {
+    const {recipeId} = req.params;
 
+    const singleRecipe = Recipe.findById(recipeId)
+    if(!singleRecipe) {
+      res.status(404).json({message: "Recipe not found"});
+    }    
+    res.json(singleRecipe);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message: "Internal server error"});
+  }
+});
 
-router.put("/edit/:id", fileUploader.single("recipeImage"), (req, res) => {
+router.put("/edit/:recipeId", fileUploader.single("recipeImage"), (req, res) => {
     const recipeId = req.params.id;
     const {title,ingredients,instructions, bodyType}=req.body;
 
@@ -66,7 +79,7 @@ router.put("/edit/:id", fileUploader.single("recipeImage"), (req, res) => {
   
   })
 
-  router.delete("/delete/:id", (req, res) => {
+  router.delete("/delete/:recipeId", (req, res) => {
     const recipeId = req.params.id;
   
     Recipe.findByIdAndDelete(recipeId)
