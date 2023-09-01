@@ -23,7 +23,7 @@ const workoutsRouter = require("./routes/workouts.routes");
 app.use("/workouts", workoutsRouter);
 
 const profileRouter = require("./routes/profile.routes");
-app.use("/profile", isAuthenticated, profileRouter);
+app.use("/profile", profileRouter);
 
 const commentRouter = require("./routes/comment.routes");
 app.use("/comment", commentRouter);

@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-
+const mongoose = require('mongoose');
 // TODO: Please make sure you edit the User model to whatever makes sense in this case
 const userSchema = new Schema(
   {
@@ -39,16 +39,14 @@ const userSchema = new Schema(
       
     },
     bmi: {
-      type: Number,
-      
+      type: mongoose.Schema.Types.Decimal128,
     },
     bodyType: {
       type: String,
-      enum:["obese","normal","OverWeight","underWeight"]
-      
+      enum:["Obese","Normal","OverWeight","UnderWeight"]
     },
     lifeStyle: {
-      type: Number,
+      type: String,
       
     },
     fitnessLevel: {
@@ -59,10 +57,10 @@ const userSchema = new Schema(
       type: String,
     },
     weight: {
-      type: String,
+      type: Number,
     },
     height: {
-      type: String,
+      type: Number,
     }
   },
   {
@@ -71,6 +69,6 @@ const userSchema = new Schema(
   }
 );
 
-const User = model("User", userSchema);
+  const User = model("User", userSchema);
 
 module.exports = User;

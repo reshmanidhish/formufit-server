@@ -27,14 +27,14 @@ const isAdmin = (req, res, next) => {
         res.status(500).json({error: "Error fetching recipes"});
     }
 })
-   
+
 router.post("/create", fileUploader.single("recipeImage"), (req,res) => {
     const {title,ingredients,instructions, bodyType, adminId}=req.body;
     const recipeImage =req.file ? req.file.path : null; // Assign the path of the uploaded file
     console.log("file is:", req.file)
     if (!recipeImage){
       return res.status(400).json({ error: "No photo uploaded!" });
-  }
+    }
 
     // Insert the recipes into the database
         Recipe.create({title, recipeImage,ingredients,instructions, bodyType})
