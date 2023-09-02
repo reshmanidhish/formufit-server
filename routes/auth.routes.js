@@ -89,11 +89,10 @@ User.findOne({ email })
     const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
 
     if (passwordCorrect) {
-      // Deconstruct the user object to omit the password
-      const { _id, email, username, userType, bodyType } = foundUser;
 
-      // Create an object that will be set as the token payload
-      const payload = { _id, email, username, "ut": userType==='admin'? 1: 0, bodyType};
+      const {_id, email, username, weight, height, userType, bodyType = "", lifestyle="",bmi} = foundUser
+
+      const payload = { _id, email, username, weight, height, userType, lifestyle, bmi,"ut": userType==='admin'? 1: 0, bodyType};
 
       // Create and sign the token
       const authToken = jwt.sign( 
@@ -123,5 +122,29 @@ router.get('/verify', isAuthenticated, (req, res, next) => {       // <== CREATE
   // previously set as the token payload
   res.status(200).json(req.payload);
 });
+
+router.get('/refresh', isAuthenticated, (req, res, next) => {       // <== CREATE NEW ROUTE
+  const {_id} = req.payload
+ 
+  User.findById(_id)
+  .then(userInfo => {
+    if (!userInfo) {
+      return res.status(404).json({message:"not found"});
+    }
+
+    const {_id, email, username, weight, height, userType, bodyType = "", lifestyle="",bmi} = userInfo
+
+    const payload = { _id, email, username, weight, height, userType, lifestyle, bmi,"ut": userType==='admin'? 1: 0, bodyType};
+  
+    const authToken = jwt.sign( 
+      payload,
+      process.env.TOKEN_SECRET,
+      { algorithm: 'HS256', expiresIn: "6h" }
+    );
+  
+    res.status(200).json({ authToken: authToken});
+  })
+  .catch(err => console.error(err))
+})
 
 module.exports = router;

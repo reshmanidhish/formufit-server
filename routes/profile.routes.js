@@ -46,17 +46,7 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
           return res.status(404).json({message:"not found"});
         }
 
-        const {_id, email, username, weight, height, userType, bodyType, lifestyle} = updatedInfo
-
-        const payload = { _id, email, username, weight, height, userType, lifestyle, "ut": userType==='admin'? 1: 0, bodyType: bodyType? 1: 0};
-
-        const authToken = jwt.sign( 
-          payload,
-          process.env.TOKEN_SECRET,
-          { algorithm: 'HS256', expiresIn: "6h" }
-        );
-
-        res.status(200).json({ authToken: authToken, message: "Wellness profile succesfully updated" });
+        res.status(200).json({ updatedInfo, message: "Wellness profile succesfully updated" });
       })
       .catch(err => console.error(err))
   })
