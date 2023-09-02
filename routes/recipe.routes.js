@@ -17,7 +17,9 @@ const isAdmin = (req, res, next) => {
 
 router.get("/", isAuthenticated, async (req, res) => {
   try {
-    const recipes = await Recipe.find();
+    const {bodyType} = req.payload;
+    console.log("bodyType=============>", bodyType)
+    const recipes = await Recipe.find({bodyType});
     res.status(200).json(recipes);
   } catch (error) {
     console.log("error fetching recipes", error);

@@ -93,7 +93,7 @@ User.findOne({ email })
       const { _id, email, username, userType, bodyType } = foundUser;
 
       // Create an object that will be set as the token payload
-      const payload = { _id, email, username, "ut": userType==='admin'? 1: 0, bodyType: bodyType? 1: 0};
+      const payload = { _id, email, username, "ut": userType==='admin'? 1: 0, bodyType};
 
       // Create and sign the token
       const authToken = jwt.sign( 
