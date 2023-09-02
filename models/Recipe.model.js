@@ -23,10 +23,10 @@ const recipeSchema = new Schema(
             type: String,
             enum:["normal","obese","Mesomorph"]
           },
-        adminId: {
-          type: Schema.Types.ObjectId,
-          ref: "User"
-        }
+        //adminId: {
+         //type: Schema.Types.ObjectId,
+         //ref: "User"
+       // }
     }
 )
 

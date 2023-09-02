@@ -1,6 +1,7 @@
 const User = require("../models/User.model");
 const router = require("express").Router();
 const fileUploader = require("../config/cloudinary.config");
+const jwt = require("jsonwebtoken");
 const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
 
  //uploading recipe image
@@ -28,6 +29,34 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
         return res.status(404).json({message:"not found"});
        }
         res.json({ updatedInfo })
+      })
+      .catch(err => console.error(err))
+  })
+
+  router.put("/wellness/answers", isAuthenticated, (req, res) => {
+    const {_id} = req.payload
+    const {lifestyle, bmi, weight, height, bodyType} = req.body;
+
+    const dataUpdate = {lifestyle, bmi, weight, height, bodyType};
+  
+    User.findByIdAndUpdate(_id, dataUpdate, {new:true})
+      .then(updatedInfo => {
+       
+        if (!updatedInfo) {
+          return res.status(404).json({message:"not found"});
+        }
+
+        const {_id, email, username, weight, height, userType, bodyType, lifestyle} = updatedInfo
+
+        const payload = { _id, email, username, weight, height, userType, lifestyle, "ut": userType==='admin'? 1: 0, bodyType: bodyType? 1: 0};
+
+        const authToken = jwt.sign( 
+          payload,
+          process.env.TOKEN_SECRET,
+          { algorithm: 'HS256', expiresIn: "6h" }
+        );
+
+        res.status(200).json({ authToken: authToken, message: "Wellness profile succesfully updated" });
       })
       .catch(err => console.error(err))
   })
