@@ -27,6 +27,7 @@ router.get("/", isAuthenticated, async (req, res) => {
     res.status(500).json({ error: "Error fetching recipes" });
   }
 });
+
 router.post("/create", fileUploader.single("recipeImage"), (req, res) => {
   const { title, ingredients, instructions, bodyType, adminId } = req.body;
   const recipeImage = req.file ? req.file.path : null; // Assign the path of the uploaded file
@@ -101,5 +102,8 @@ router.delete("/delete/:recipeId", (req, res) => {
     })
     .catch((err) => console.error(err));
 });
+
+
+
 
 module.exports = router;
