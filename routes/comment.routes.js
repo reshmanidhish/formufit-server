@@ -4,30 +4,21 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
 
 //new comment
 
-router.post("/", isAuthenticated, async (req, res) => {
+router.post("/create", isAuthenticated, async (req, res) => {
     try{
+        console.log("request body:", req.body);
         const {recipeId, comment} = req.body;
-        const userId = req.user._id;
-        const newComment = new Comment({user: userId, recipe: recipeId, comment});
-        await newComment.save();
+        console.log("payload:", req.payload)
+        const userId = req.payload;
+        console.log("recipeId:", recipeId);
+        console.log("comment:", comment);
+        console.log("userId", userId);
+        const newComment = await Comment.create({user: userId, recipe: recipeId, comment});
         res.status(201).json(newComment);
 
     } 
     catch (error) {
         res.status(500).json({error: "Error creating a comment"});
-    }
-});
-
-//for specific recipes
-
-router.get("/:recipeId", async (req, res)=> {
-    try {
-        const recipeId = req.params.recipeId;
-        const comments = await Comment.find({recipe: recipeId}).populate("user");
-        res.status(200).json(comments); 
-    }
-    catch (error) {
-        res.status(500).json({error: "Error fetching comments"});
     }
 });
 

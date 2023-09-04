@@ -1,4 +1,5 @@
 const Recipe = require("../models/Recipe.model");
+const Comment = require ("../models/Comment.model");
 const router = require("express").Router();
 
 const fileUploader = require("../config/cloudinary.config");
@@ -29,7 +30,7 @@ router.get("/", isAuthenticated, async (req, res) => {
 });
 
 router.post("/create", fileUploader.single("recipeImage"), (req, res) => {
-  const { title, ingredients, instructions, bodyType, adminId } = req.body;
+  const { title, ingredients, instructions, bodyType } = req.body;
   const recipeImage = req.file ? req.file.path : null; // Assign the path of the uploaded file
   console.log("file is:", req.file);
   if (!recipeImage) {
@@ -56,8 +57,9 @@ router.get("/:recipeId", isAuthenticated, async (req, res) => {
     if (!singleRecipe) {
       res.status(404).json({ message: "Recipe not found" });
     }
-
-    res.status(200).json(singleRecipe);
+    const comments = await Comment.find({recipe: recipeId})
+    .populate("user");
+    res.status(200).json({singleRecipe, comments});
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
