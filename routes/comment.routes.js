@@ -4,11 +4,11 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
 
 //new comment
 
-router.post("/", async (req, res) => {
+router.post("/", isAuthenticated, async (req, res) => {
     try{
         const {recipeId, comment} = req.body;
         const userId = req.user._id;
-        const newComment = new Comment({user: userId, recipe: recipeId, newComment});
+        const newComment = new Comment({user: userId, recipe: recipeId, comment});
         await newComment.save();
         res.status(201).json(newComment);
 
