@@ -6,10 +6,7 @@ const fitnessSchema = new Schema(
             type: String,
             required: true
           },
-        description: {
-            type: String,
-            required: true
-          },
+      
         videoUrl: {
             type: String,
             required: true
@@ -21,6 +18,6 @@ const fitnessSchema = new Schema(
     }
 )
 
-const Fitness = model("Comment", fitnessSchema);
+const Fitness = model("Fitness", fitnessSchema);
 
 module.exports = Fitness;

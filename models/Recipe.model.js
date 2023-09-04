@@ -20,13 +20,17 @@ const recipeSchema = new Schema(
             required: true
           },
         bodyType: {
-            type: Schema.Types.ObjectId,
-            ref: "User"
+            type: String,
+            enum:["Obese","Normal","OverWeight","UnderWeight"]
           },
-        adminId: {
-          type: Schema.Types.ObjectId,
-          ref: "User"
-        }
+        mealType: {
+          type: String,
+          enum:["Breakfast","Dinner","Lunch"]
+        },
+        //adminId: {
+         //type: Schema.Types.ObjectId,
+         //ref: "User"
+       // }
     }
 )
 
