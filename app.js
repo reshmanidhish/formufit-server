@@ -10,13 +10,13 @@ const { isAuthenticated } = require("./middlewares/jwt.middleware");
 require("./config")(app);
 
 
-const cors = require('cors');
+// const cors = require('cors');
 
-app.use(cors({
-    origin: process.env.ORIGIN,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // This allows cookies to be sent cross-origin
-}));
+// app.use(cors({
+//     origin: process.env.ORIGIN,
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//     credentials: true, // This allows cookies to be sent cross-origin
+// }));
 
 // 👇 Start handling routes here
 const indexRoutes = require("./routes/index.routes");
@@ -39,6 +39,9 @@ app.use("/comment", commentRouter);
 
 const paymentRouter = require("./routes/payment.routes");
 app.use("/payment", paymentRouter);
+
+const ratingRouter = require("./routes/rating.routes");
+app.use("/rating", ratingRouter);
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);

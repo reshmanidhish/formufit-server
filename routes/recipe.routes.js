@@ -1,5 +1,6 @@
 const Recipe = require("../models/Recipe.model");
 const Comment = require ("../models/Comment.model");
+const Rating = require ("../models/Rating.model");
 const router = require("express").Router();
 
 const fileUploader = require("../config/cloudinary.config");
@@ -57,6 +58,14 @@ router.get("/:recipeId", isAuthenticated, async (req, res) => {
     if (!singleRecipe) {
       res.status(404).json({ message: "Recipe not found" });
     }
+
+    const ratings = await Rating.find({recipe: recipeId});
+    let averageRating = 0;
+    if (ratings.length > 0) {
+      const totalRating = ratings.reduce((acc, curr) => acc + curr.rating, 0);
+      averageRating = totalRating / ratings.length;
+    }
+
     const comments = await Comment.find({recipe: recipeId})
     .populate("user");
     res.status(200).json({singleRecipe, comments});

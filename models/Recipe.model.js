@@ -27,6 +27,12 @@ const recipeSchema = new Schema(
           type: String,
           enum:["Breakfast","Dinner","Lunch"]
         },
+        ratings: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: "Rating",
+          }
+        ]
         //adminId: {
          //type: Schema.Types.ObjectId,
          //ref: "User"
