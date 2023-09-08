@@ -59,6 +59,15 @@ const userSchema = new Schema(
     weight: {
       type: Number,
     },
+    goalWeight: {
+      type: Number,
+    },
+    subscriptionPlanId: {
+      type: String,
+    },
+    isPremium: {
+      type: Boolean,
+    },
     height: {
       type: Number,
     }
