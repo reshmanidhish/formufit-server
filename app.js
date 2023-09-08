@@ -37,6 +37,8 @@ app.use("/profile", profileRouter);
 const commentRouter = require("./routes/comment.routes");
 app.use("/comment", commentRouter);
 
+const paymentRouter = require("./routes/payment.routes");
+app.use("/payment", paymentRouter);
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);

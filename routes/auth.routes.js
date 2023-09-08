@@ -90,9 +90,9 @@ User.findOne({ email })
 
     if (passwordCorrect) {
 
-      const {_id, email, username, weight, height, userType, bodyType = "", lifestyle="",bmi} = foundUser
+      const {_id, email, username, isPremium = false, weight, height,  userType, bodyType = "", lifestyle="",bmi} = foundUser
 
-      const payload = { _id, email, username, weight, height, userType, lifestyle, bmi,"ut": userType==='admin'? 1: 0, bodyType};
+      const payload = { _id, email, username,  pu: isPremium? 1: 0, weight, height, userType, lifestyle, bmi,"ut": userType==='admin'? 1: 0, bodyType};
 
       // Create and sign the token
       const authToken = jwt.sign( 
@@ -112,18 +112,11 @@ User.findOne({ email })
   .catch(err => res.status(500).json({ message: "Internal Server Error" }));
 });
 
-router.get('/verify', isAuthenticated, (req, res, next) => {       // <== CREATE NEW ROUTE
-
-  // If JWT token is valid the payload gets decoded by the
-  // isAuthenticated middleware and made available on `req.payload`
-  console.log(`req.payload`, req.payload);
- 
-  // Send back the object with user data
-  // previously set as the token payload
+router.get('/verify', isAuthenticated, (req, res, next) => { 
   res.status(200).json(req.payload);
 });
 
-router.get('/refresh', isAuthenticated, (req, res, next) => {       // <== CREATE NEW ROUTE
+router.get('/refresh', isAuthenticated, (req, res, next) => {
   const {_id} = req.payload
  
   User.findById(_id)
@@ -132,9 +125,9 @@ router.get('/refresh', isAuthenticated, (req, res, next) => {       // <== CREAT
       return res.status(404).json({message:"not found"});
     }
 
-    const {_id, email, username, weight, height, userType, bodyType = "", lifestyle="",bmi} = userInfo
+    const {_id, email, username, isPremium = false, weight, height, userType, bodyType = "", lifestyle="",bmi} = userInfo
 
-    const payload = { _id, email, username, weight, height, userType, lifestyle, bmi,"ut": userType==='admin'? 1: 0, bodyType};
+    const payload = { _id, email, username, pu: isPremium? 1: 0, weight, height, userType, lifestyle, bmi,"ut": userType==='admin'? 1: 0, bodyType};
   
     const authToken = jwt.sign( 
       payload,
