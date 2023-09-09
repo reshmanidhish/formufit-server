@@ -31,15 +31,16 @@ router.get("/", isAuthenticated, async (req, res) => {
 });
 
 router.post("/create", fileUploader.single("recipeImage"), (req, res) => {
-  const { title, ingredients, instructions, bodyType } = req.body;
+  const { title, instructions,ingredients, bodyType, mealType, cookingTime } = req.body;
   const recipeImage = req.file ? req.file.path : null; // Assign the path of the uploaded file
   console.log("file is:", req.file);
+ 
   if (!recipeImage) {
     return res.status(400).json({ error: "No photo uploaded!" });
   }
 
   // Insert the recipes into the database
-  Recipe.create({ title, recipeImage, ingredients, instructions, bodyType })
+  Recipe.create({ title, recipeImage, ingredients, instructions, bodyType, mealType, cookingTime })
     .then((createdRecipes) => {
       console.log("Recipes created:", createdRecipes);
       res.status(201).json(createdRecipes);
@@ -80,7 +81,7 @@ router.put(
   fileUploader.single("recipeImage"),
   (req, res) => {
     const recipeId = req.params.recipeId;
-    const { title, ingredients, instructions, bodyType } = req.body;
+    const { title, ingredients, instructions, bodyType, mealType, cookingTime } = req.body;
 
     const updatedForm = {
       title,

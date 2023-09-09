@@ -11,10 +11,10 @@ const recipeSchema = new Schema(
             type: String,
             required: true
           },
-        ingredients: {
+        ingredients: [{
             type: String,
             required: true
-          },
+          }],
         instructions: {
             type: String,
             required: true
@@ -26,6 +26,10 @@ const recipeSchema = new Schema(
         mealType: {
           type: String,
           enum:["Breakfast","Dinner","Lunch"]
+        },
+        cookingTime: {
+          type: Number,
+          required: true
         },
         ratings: [
           {
