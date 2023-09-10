@@ -5,17 +5,7 @@ const fileUploader = require("../config/cloudinary.config");
 const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
 const CommentRating = require("../models/CommentRating.model");
 
-//isadmin middleware
-
-const isAdmin = (req, res, next) => {
-  // we're using ut to indicate admin role in the JWT payload
-  if (req.user && req.user.ut === 1) {
-    next();
-  } else {
-    res.status(403).json({ error: "Admin authorization required" });
-  }
-};
-
+// GET /recipes - For getting all receipes
 router.get("/", isAuthenticated, async (req, res) => {
   try {
     const {bodyType, ut} = req.payload;
@@ -29,6 +19,7 @@ router.get("/", isAuthenticated, async (req, res) => {
   }
 });
 
+// POST /recipes/create  -  For creating single receipe
 router.post("/create", fileUploader.single("recipeImage"), (req, res) => {
   const { title, instructions,ingredients, bodyType, mealType, cookingTime } = req.body;
   const recipeImage = req.file ? req.file.path : null; // Assign the path of the uploaded file
@@ -38,7 +29,6 @@ router.post("/create", fileUploader.single("recipeImage"), (req, res) => {
     return res.status(400).json({ error: "No photo uploaded!" });
   }
 
-  // Insert the recipes into the database
   Recipe.create({ title, recipeImage, ingredients, instructions, bodyType, mealType, cookingTime })
     .then((createdRecipes) => {
       console.log("Recipes created:", createdRecipes);
@@ -50,10 +40,11 @@ router.post("/create", fileUploader.single("recipeImage"), (req, res) => {
     });
 });
 
+// POST /recipes/:recipeId - For getting single receipe. recipeId is the path param, example /recipes/64fcec4d12b54b87311b10ec
 router.get("/:recipeId", isAuthenticated, async (req, res) => {
   try {
     const { recipeId } = req.params;
-    const {email} = req.payload;
+    const { email } = req.payload;
 
     const singleRecipe = await Recipe.findById(recipeId);
     if (!singleRecipe) {

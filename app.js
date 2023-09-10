@@ -40,9 +40,6 @@ app.use("/comment-rating", commentRatingRouter);
 const paymentRouter = require("./routes/payment.routes");
 app.use("/payment", paymentRouter);
 
-const ratingRouter = require("./routes/rating.routes");
-app.use("/rating", ratingRouter);
-
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 

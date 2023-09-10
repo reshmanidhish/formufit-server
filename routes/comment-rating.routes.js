@@ -8,12 +8,8 @@ router.post("/", isAuthenticated, async (req, res) => {
     try{
         const {recipeId, comment, rating} = req.body;
         const userId = req.payload;
-        console.log("recipeId:", recipeId);
-        console.log("comment:", comment);
-        console.log("userId", userId);
         const newComment = await CommentRating.create({user: userId, recipe: recipeId, comment, rating});
         res.status(201).json(newComment);
-
     } 
     catch (error) {
         res.status(500).json({error: "Error creating a comment"});
