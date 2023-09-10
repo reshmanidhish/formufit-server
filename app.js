@@ -34,8 +34,8 @@ app.use("/workouts", workoutsRouter);
 const profileRouter = require("./routes/profile.routes");
 app.use("/profile", profileRouter);
 
-const commentRouter = require("./routes/comment.routes");
-app.use("/comment", commentRouter);
+const commentRatingRouter = require("./routes/comment-rating.routes");
+app.use("/comment-rating", commentRatingRouter);
 
 const paymentRouter = require("./routes/payment.routes");
 app.use("/payment", paymentRouter);

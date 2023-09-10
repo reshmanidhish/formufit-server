@@ -1,10 +1,9 @@
 const Recipe = require("../models/Recipe.model");
-const Comment = require ("../models/Comment.model");
-const Rating = require ("../models/Rating.model");
 const router = require("express").Router();
 
 const fileUploader = require("../config/cloudinary.config");
 const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
+const CommentRating = require("../models/CommentRating.model");
 
 //isadmin middleware
 
@@ -54,32 +53,39 @@ router.post("/create", fileUploader.single("recipeImage"), (req, res) => {
 router.get("/:recipeId", isAuthenticated, async (req, res) => {
   try {
     const { recipeId } = req.params;
+    const {email} = req.payload;
 
     const singleRecipe = await Recipe.findById(recipeId);
     if (!singleRecipe) {
       res.status(404).json({ message: "Recipe not found" });
     }
 
-    const ratings = await Rating.find({recipe: recipeId});
+    const commentsAndRatings = await CommentRating.find({recipe: recipeId})
+    .populate("user", ["username", "email"]);
+
     let averageRating = 0;
-    if (ratings.length > 0) {
-      const totalRating = ratings.reduce((acc, curr) => acc + curr.rating, 0);
-      averageRating = totalRating / ratings.length;
+    let isUserRatedAndCommented = false;
+
+    if (commentsAndRatings.length > 0) {
+      let totalRating = 0
+      commentsAndRatings.forEach(commentAndRating => {
+        totalRating += commentAndRating.rating
+        if(commentAndRating.user.email === email) {
+          isUserRatedAndCommented = true
+        }
+      })
+      averageRating = totalRating / commentsAndRatings.length;
     }
 
-    const comments = await Comment.find({recipe: recipeId})
-    .populate("user");
-    res.status(200).json({singleRecipe, comments});
+    res.status(200).json({singleRecipe, commentsAndRatings, averageRating, isUserRatedAndCommented});
+
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
 
-router.put(
-  "/edit/:recipeId",
-  fileUploader.single("recipeImage"),
-  (req, res) => {
+router.put("/edit/:recipeId",fileUploader.single("recipeImage"),(req, res) => {
     const recipeId = req.params.recipeId;
     const { title, ingredients, instructions, bodyType, mealType, cookingTime } = req.body;
 

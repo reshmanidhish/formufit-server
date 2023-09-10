@@ -1,7 +1,6 @@
 const { Schema, model } = require("mongoose");
-const mongoose = require("mongoose");
 
-const ratingSchema = new Schema({
+const commentRatingSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -10,10 +9,7 @@ const ratingSchema = new Schema({
   recipe: {
     type: Schema.Types.ObjectId,
     ref: "Recipe",
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+    required: true,
   },
   rating: {
     type: Number,
@@ -21,12 +17,16 @@ const ratingSchema = new Schema({
     max: 5,
     required: true,
   },
-  createAt: {
+  comment: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Rating = model("Rating", ratingSchema);
+const CommentRating = model("comment-rating", commentRatingSchema);
 
-module.exports = Rating;
+module.exports = CommentRating;
