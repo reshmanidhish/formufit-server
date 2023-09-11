@@ -10,13 +10,13 @@ const { isAuthenticated } = require("./middlewares/jwt.middleware");
 require("./config")(app);
 
 
-const cors = require('cors');
+// const cors = require('cors');
 
-app.use(cors({
-    origin: process.env.ORIGIN,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // This allows cookies to be sent cross-origin
-}));
+// app.use(cors({
+//     origin: process.env.ORIGIN,
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//     credentials: true, // This allows cookies to be sent cross-origin
+// }));
 
 // 👇 Start handling routes here
 const indexRoutes = require("./routes/index.routes");
@@ -34,8 +34,8 @@ app.use("/workouts", workoutsRouter);
 const profileRouter = require("./routes/profile.routes");
 app.use("/profile", profileRouter);
 
-const commentRouter = require("./routes/comment.routes");
-app.use("/comment", commentRouter);
+const commentRatingRouter = require("./routes/comment-rating.routes");
+app.use("/comment-rating", commentRatingRouter);
 
 const paymentRouter = require("./routes/payment.routes");
 app.use("/payment", paymentRouter);
