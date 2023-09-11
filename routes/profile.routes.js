@@ -6,7 +6,7 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware.js");
 const { getRandomRecipe, getRandomFitness } = require("./helper/service");
 
 router.post(
-  "/upload",
+  "/upload/:id",
   fileUploader.single("profileImage"),
   (req, res, next) => {
     console.log("file is:", req.file);
