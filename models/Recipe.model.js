@@ -22,7 +22,7 @@ const recipeSchema = new Schema({
   },
   bodyType: {
     type: String,
-    enum: ["Obese", "Normal", "OverWeight", "UnderWeight"],
+    enum: ["Obese", "Normal", "Overweight", "Underweight"],
   },
   mealType: {
     type: String,
