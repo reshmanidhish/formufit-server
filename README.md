@@ -1,4 +1,7 @@
 # FormuFit-server
+
+Demo - [https://formufit.netlify.app/](https://formufit.netlify.app/)
+
 Formufit is an advanced diet planner app that empowers you to take control of your health and fitness journey. Through a comprehensive analysis of your healthstyle and body type, Formufit offers a personalized approach to well-being. Experience a curated selection of customized food recipes and targeted workouts, all designed to help you sculpt a healthier, more vibrant you. 
 # Data-model
 
